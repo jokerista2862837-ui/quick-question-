@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Would You Date Me? 🌹</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        min-height: 100vh;
+        overflow: hidden;
+        font-family: "Segoe UI", sans-serif;
+
+        background:
+            radial-gradient(circle at 20% 20%, #ffd6e7 0%, transparent 30%),
+            radial-gradient(circle at 80% 80%, #ffb6d3 0%, transparent 30%),
+            linear-gradient(135deg, #ff8fb8, #ff5f96, #e94f87);
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        position: relative;
+    }
+
+    /* ---------- BACKGROUND FLOWERS ---------- */
+
+    .flower {
+        position: absolute;
+        font-size: 45px;
+        opacity: 0.35;
+        animation: float 6s ease-in-out infinite;
+        user-select: none;
+    }
+
+    .f1 { top: 8%; left: 8%; animation-delay: 0s; }
+    .f2 { top: 15%; right: 10%; animation-delay: 1s; }
+    .f3 { bottom: 12%; left: 12%; animation-delay: 2s; }
+    .f4 { bottom: 8%; right: 8%; animation-delay: 3s; }
+    .f5 { top: 45%; left: 3%; animation-delay: 1.5s; }
+    .f6 { top: 40%; right: 4%; animation-delay: 2.5s; }
+
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0) rotate(-5deg);
+        }
+
+        50% {
+            transform: translateY(-20px) rotate(8deg);
+        }
+    }
+
+    /* ---------- FALLING PETALS ---------- */
+
+    .petal {
+        position: absolute;
+        top: -30px;
+        color: #fff0f6;
+        font-size: 20px;
+        animation: fall linear infinite;
+        opacity: 0.7;
+    }
+
+    @keyframes fall {
+        from {
+            transform: translateY(-40px) rotate(0deg);
+        }
+
+        to {
+            transform: translateY(110vh) rotate(360deg);
+        }
+    }
+
+    /* ---------- MAIN CARD ---------- */
+
+    .card {
+        width: min(90%, 550px);
+        min-height: 430px;
+
+        padding: 55px 35px;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        text-align: center;
+
+        background: rgba(255,255,255,0.18);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+
+        border: 1px solid rgba(255,255,255,0.35);
+
+        border-radius: 35px;
+
+        box-shadow:
+            0 25px 70px rgba(104, 0, 42, 0.25),
+            inset 0 0 30px rgba(255,255,255,0.12);
+
+        position: relative;
+        z-index: 10;
+
+        animation: appear 1s ease;
+    }
+
+    @keyframes appear {
+        from {
+            opacity: 0;
+            transform: scale(0.8) translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+    }
+
+    .rose {
+        font-size: 65px;
+        margin-bottom: 10px;
+
+        animation: roseFloat 3s ease-in-out infinite;
+
+        filter: drop-shadow(0 5px 10px rgba(130,0,50,0.25));
+    }
+
+    @keyframes roseFloat {
+        0%,100% {
+            transform: translateY(0) rotate(-3deg);
+        }
+
+        50% {
+            transform: translateY(-8px) rotate(3deg);
+        }
+    }
+
+    h1 {
+        color: white;
+
+        font-family: Georgia, serif;
+
+        font-size: clamp(32px, 7vw, 52px);
+
+        font-weight: 500;
+
+        letter-spacing: -1px;
+
+        text-shadow:
+            0 4px 15px rgba(120,0,50,0.25);
+
+        margin-bottom: 12px;
+    }
+
+    .subtitle {
+        color: rgba(255,255,255,0.9);
+
+        font-size: 16px;
+
+        margin-bottom: 35px;
+    }
+
+    /* ---------- BUTTONS ---------- */
+
+    .buttons {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        justify-content: center;
+
+        position: relative;
+
+        width: 100%;
+        height: 70px;
+    }
+
+    button {
+        border: none;
+        padding: 15px 32px;
+
+        border-radius: 50px;
+
+        font-size: 17px;
+        font-weight: 700;
+
+        cursor: pointer;
+
+        transition:
+            transform 0.25s ease,
+            box-shadow 0.25s ease,
+            opacity 0.25s ease;
+
+        font-family: inherit;
+    }
+
+    #yes {
+        background: white;
+        color: #e83f7e;
+
+        box-shadow:
+            0 8px 25px rgba(100,0,40,0.2);
+    }
+
+    #yes:hover {
+        transform: scale(1.12);
+
+        box-shadow:
+            0 12px 35px rgba(100,0,40,0.3);
+    }
+
+    #no {
+        background: rgba(255,255,255,0.25);
+
+        color: white;
+
+        border: 1px solid rgba(255,255,255,0.45);
+
+        position: relative;
+
+        z-index: 20;
+    }
+
+    #no:hover {
+        transform: scale(1.05);
+    }
+
+    /* ---------- MESSAGE ---------- */
+
+    #message {
+        min-height: 25px;
+
+        margin-top: 20px;
+
+        color: white;
+
+        font-size: 15px;
+
+        font-weight: 600;
+
+        transition: opacity 0.3s ease;
+    }
+
+    /* ---------- SUCCESS ---------- */
+
+    .success {
+        position: fixed;
+
+        inset: 0;
+
+        background:
+            radial-gradient(circle at center,
+            rgba(255,255,255,0.2),
+            transparent 50%),
+            linear-gradient(135deg,#ff6fa5,#e93879);
+
+        display: flex;
+
+        justify-content: center;
+        align-items: center;
+
+        flex-direction: column;
+
+        z-index: 100;
+
+        text-align: center;
+
+        opacity: 0;
+        pointer-events: none;
+
+        transition: opacity 0.6s ease;
+    }
+
+    .success.show {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .success h2 {
+        color: white;
+
+        font-family: Georgia, serif;
+
+        font-size: clamp(40px, 10vw, 75px);
+
+        margin-bottom: 15px;
+
+        animation: successPop 0.8s ease;
+    }
+
+    .success p {
+        color: white;
+
+        font-size: 20px;
+    }
+
+    @keyframes successPop {
+        0% {
+            transform: scale(0);
+        }
+
+        70% {
+            transform: scale(1.15);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    /* ---------- HEARTS ---------- */
+
+    .heart {
+        position: fixed;
+
+        bottom: -30px;
+
+        font-size: 25px;
+
+        pointer-events: none;
+
+        animation: heartUp 4s linear forwards;
+
+        z-index: 150;
+    }
+
+    @keyframes heartUp {
+        0% {
+            transform: translateY(0) scale(0.5) rotate(0deg);
+            opacity: 0;
+        }
+
+        15% {
+            opacity: 1;
+        }
+
+        100% {
+            transform: translateY(-110vh) scale(1.4) rotate(30deg);
+            opacity: 0;
+        }
+    }
+
+    @media (max-width: 500px) {
+
+        .card {
+            min-height: 390px;
+            padding: 40px 20px;
+        }
+
+        .buttons {
+            gap: 12px;
+        }
+
+        button {
+            padding: 13px 24px;
+            font-size: 16px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<!-- Decorative flowers -->
+
+<div class="flower f1">🌹</div>
+<div class="flower f2">🌸</div>
+<div class="flower f3">🌷</div>
+<div class="flower f4">🌹</div>
+<div class="flower f5">🌺</div>
+<div class="flower f6">🌸</div>
+
+
+<!-- Main card -->
+
+<div class="card">
+
+    <div class="rose">🌹</div>
+
+    <h1>Would you date me?</h1>
+
+    <p class="subtitle">
+        Be honest... but choose wisely. 👀
+    </p>
+
+    <div class="buttons">
+
+        <button id="yes">
+            Yes 💗
+        </button>
+
+        <button id="no">
+            No 🙃
+        </button>
+
+    </div>
+
+    <div id="message"></div>
+
+</div>
+
+
+<!-- Success screen -->
+
+<div class="success" id="success">
+
+    <div style="font-size:80px;">
+        💐
+    </div>
+
+    <h2>I knew it! ❤️</h2>
+
+    <p>
+        Looks like we have a date. 🌹
+    </p>
+
+</div>
+
+
+<script>
+emailjs.init({
+    publicKey: "vV13Ax3lDp4dVCz4b"
+});
+
+const noButton = document.getElementById("no");
+const yesButton = document.getElementById("yes");
+const message = document.getElementById("message");
+const success = document.getElementById("success");
+
+let attempts = 0;
+
+const messages = [
+    "Are you sure? 🥺",
+    "Think again... 🌹",
+    "Nice try 😌",
+    "The YES button is right there ??",
+    "You really want to say no? 😭",
+    "I'm starting to think you're just shy... 💗",
+    "Okay... one last chance 😏",
+    "The universe wants you to press YES ✨"
+];
+
+function moveNoButton() {
+
+    attempts++;
+
+    message.textContent =
+        messages[Math.min(attempts - 1, messages.length - 1)];
+
+    /*
+       After several attempts the NO button
+       becomes increasingly difficult to catch.
+    */
+
+    if (attempts >= 3) {
+
+        noButton.style.position = "fixed";
+
+        const padding = 30;
+
+        const maxX =
+            window.innerWidth -
+            noButton.offsetWidth -
+            padding;
+
+        const maxY =
+            window.innerHeight -
+            noButton.offsetHeight -
+            padding;
+
+        const x =
+            Math.random() * (maxX - padding) + padding;
+
+        const y =
+            Math.random() * (maxY - padding) + padding;
+
+        noButton.style.left = x + "px";
+        noButton.style.top = y + "px";
+    }
+
+    /*
+       Make YES progressively more tempting.
+    */
+
+    if (attempts >= 2) {
+
+        const scale = Math.min(1 + attempts * 0.08, 1.5);
+
+        yesButton.style.transform =
+            `scale(${scale})`;
+    }
+
+    /*
+       Make NO slightly smaller after repeated attempts.
+    */
+
+    if (attempts >= 5) {
+
+        const scale =
+            Math.max(1 - (attempts - 4) * 0.08, 0.65);
+
+        noButton.style.transform =
+            `scale(${scale})`;
+    }
+}
+
+
+/*
+   Desktop:
+   escape when mouse gets close.
+*/
+
+noButton.addEventListener("mouseenter", moveNoButton);
+
+
+/*
+   Mobile:
+   escape when touched.
+*/
+
+noButton.addEventListener("touchstart", function(e) {
+
+    e.preventDefault();
+
+    moveNoButton();
+
+});
+
+
+/*
+   If somehow she manages to click NO,
+   the message changes.
+*/
+
+noButton.addEventListener("click", function() {
+
+    message.textContent =
+        "That button doesn't seem to work... suspicious 🤨🌹";
+
+    moveNoButton();
+
+});
+
+
+/*
+   YES button
+*/
+yesButton.addEventListener("click", function() {
+
+    // Prevent multiple clicks
+    yesButton.disabled = true;
+    yesButton.textContent = "Sending... 💌";
+
+    emailjs.send(
+        "service_k6w82jp",
+        "template_yuhhxwz",
+        {
+            message: "💗 SHE SAID YES! 🌹\n\nSomeone just accepted your date invitation!",
+            subject: "💗 She Said YES!"
+        }
+    )
+    .then(function(response) {
+
+        console.log("Email sent successfully!", response.status);
+
+        success.classList.add("show");
+
+        createHearts();
+
+    })
+    .catch(function(error) {
+
+        console.error("EmailJS error:", error);
+
+        yesButton.disabled = false;
+        yesButton.textContent = "Yes 💗";
+
+        message.textContent =
+            "Oops... something went wrong. Try again 💌";
+
+    });
+
+});
+
+/*
+   Create floating hearts.
+*/
+
+function createHearts() {
+
+    for (let i = 0; i < 45; i++) {
+
+        setTimeout(() => {
+
+            const heart = document.createElement("div");
+
+            heart.className = "heart";
+
+            const hearts = [
+                "❤️",
+                "💗",
+                "💕",
+                "💖",
+                "🌹"
+            ];
+
+            heart.textContent =
+                hearts[Math.floor(Math.random() * hearts.length)];
+
+            heart.style.left =
+                Math.random() * 100 + "vw";
+
+            heart.style.fontSize =
+                (18 + Math.random() * 30) + "px";
+
+            heart.style.animationDuration =
+                (3 + Math.random() * 3) + "s";
+
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 6000);
+
+        }, i * 80);
+    }
+}
+
+
+/*
+   Create background petals.
+*/
+
+function createPetals() {
+
+    for (let i = 0; i < 18; i++) {
+
+        const petal =
+            document.createElement("div");
+
+        petal.className = "petal";
+
+        petal.textContent = "🌸";
+
+        petal.style.left =
+            Math.random() * 100 + "vw";
+
+        petal.style.fontSize =
+            (12 + Math.random() * 15) + "px";
+
+        petal.style.animationDuration =
+            (6 + Math.random() * 8) + "s";
+
+        petal.style.animationDelay =
+            Math.random() * 8 + "s";
+
+        document.body.appendChild(petal);
+    }
+}
+
+createPetals();
+
+</script>
+
+</body>
+</html>
